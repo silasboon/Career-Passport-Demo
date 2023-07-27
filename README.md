@@ -54,6 +54,3 @@ The **VIU Career Passport** project is continuously evolving, and future enhance
 
 The **VIU Career Passport** project has made significant strides in providing a platform for students to access valuable career-related knowledge. The application's foundation has been laid, with knowledge cards, faculty-specific categorization, and an administrator dashboard fully operational. As development continues, the addition of activities, notifications, and full student profile functionality promises to make the application an indispensable resource for VIU students as they explore their career paths. 🏅🌟
 
----
-
-_Note: The above document is a sample outline. You can further expand each section with more detailed explanations, code snippets, images, or screenshots to make it comprehensive and tailored to your specific project progress._ 📄💻

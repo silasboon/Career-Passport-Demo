@@ -100,7 +100,7 @@ const ViewStudentsPage = () => {
 				<tbody>
 					{students &&
 						students.students.map((student) => (
-							<tr className="bg-white border-b">
+							<tr className="bg-white border-b" key={student.id}>
 								<th
 									scope="row"
 									className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap"

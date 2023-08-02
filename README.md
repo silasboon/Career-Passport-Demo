@@ -55,4 +55,21 @@ The **VIU Career Passport** project is continuously evolving, and future enhance
 The **VIU Career Passport** project has made significant strides in providing a platform for students to access valuable career-related knowledge. The application's foundation has been laid, with knowledge cards, faculty-specific categorization, and an administrator dashboard fully operational. As development continues, the addition of activities, notifications, and full student profile functionality promises to make the application an indispensable resource for VIU students as they explore their career paths. 🏅🌟
 
 ## Contributors 🤝
+
 Silas Boon
+
+## User Stories
+
+- View students’ progresses, so that we can confirm what they have done and approve activities
+- Access non-VIU users’ contact info, so that we can use this info for marketing purposes (only if the user agrees to be contacted)
+- Create/edit/delete knowledge cards and activity cards, so that we can easily manage the content of this program
+- Link a knowledge piece to an activity, so that it is easier for us to sort out the content
+- Assign featured content blocks for the main page, so that I can manage the page based on what needs to be promoted
+- Approve users’ activity submissions, so that we can implement a reward system
+- Allow users to collect points for each activity completed, so that we can implement a reward system
+- Publish announcements on the main page, so that users can be informed on job search news/policies/funding, etc.
+- Allow users to customize their activities/knowledge, so that each user can access a list of activities/knowledge that they are interested in completing/viewing (like a wish list for each user)
+- Assign activities/knowledge to any user, so that we can help customize a job search plan for them
+- Allow users to view their own progress and points/award level, so that their participation becomes more measurable
+- Block/disable an account, so that we can ensure appropriate use of this program
+- Pull stats (number of active users, academic programs, most popular activity/knowledge, etc.) of the program, so that we can use the information to further develop content for this program

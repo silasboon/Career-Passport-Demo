@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
 	// get faculty data from database
-	const facultyData = await prisma.knowledge.findMany();
+	const facultyData = await prisma.knowledge.findMany( );
 
 	prisma.$disconnect();
 

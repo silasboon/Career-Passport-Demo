@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import HashLoader from "react-spinners/HashLoader";
 import { useRouter } from "next/navigation";
 import { Success, Error } from "@/app/components/toasts";
+
 const faculty_dict: any = {
 	1: "Computer Science",
 	2: "ITAS",
@@ -38,9 +39,9 @@ const Knowledge = () => {
 		fetch(`/api/getAllKnowledgeCards`)
 			.then(async (res) => {
 				const response = await res.json();
-
 				setKnowledge(response);
 				setLoading(false);
+				console.log(response)
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -69,6 +70,7 @@ const Knowledge = () => {
 			</>
 		);
 	}
+
 	// Handle modal
 	const modal = (item: any) => {
 		setId(item.id);
@@ -225,12 +227,12 @@ const Knowledge = () => {
 										scope="row"
 										className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
 									>
-										{truncateText(item.title, 40)}
+										{/* {truncateText(item.title, 40)} */}
 									</th>
 									<td className="px-6 py-4">
-										{truncateText(item.description, 50)}
+										{/* {truncateText(item.description, 50)} */}
 									</td>
-									<td className="px-6 py-4">{truncateText(item.link, 50)}</td>
+									{/* <td className="px-6 py-4">{truncateText(item.link, 50)}</td> */}
 									<td className="px-6 py-4">
 										{item.faculty ? faculty_dict[item.faculty] : "All"}
 									</td>

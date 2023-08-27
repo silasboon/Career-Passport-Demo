@@ -4,6 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { Success, Error } from "@/app/components/toasts";
+import Link from "next/link";
 
 import HashLoader from "react-spinners/HashLoader";
 
@@ -12,6 +13,20 @@ const ViewStudentsPage = () => {
 	const [toastMessage, setToastMessage] = useState("");
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
+	const [updated, setUpdated] = useState(false);
+	const [miniLoading, setMiniLoading] = useState(false);
+	const [knowledge, setKnowledge] = useState({
+		facultyData: [
+			{
+				id: null,
+				title: null,
+				description: null,
+				link: null,
+				faculty: null,
+				available_to_all: null,
+			},
+		],
+	});
 	const [students, setStudents] = useState({
 		students: [
 			{
@@ -39,7 +54,29 @@ const ViewStudentsPage = () => {
 				}, randomNumber);
 			})
 			.catch((err) => console.log(err));
-	}, []);
+	}, [updated]);
+
+	// TODO: Make getting faculty ID's dynamic
+	const getKnowledgeCardsByFaculty = (faculty: any) => {
+		if (faculty == "ITAS") {
+			fetch("/api/getKnowledgeCards/2").then(async (res) => {
+				const response = await res.json();
+				setKnowledge(response);
+				setMiniLoading(false);
+			});
+		} else if (faculty === "Computer Science") {
+			fetch("/api/getKnowledgeCards/1").then(async (res) => {
+				const response = await res.json();
+				setKnowledge(response);
+				setMiniLoading(false);
+			});
+		}
+	};
+
+	const getStudentInfo = async (faculty: any) => {
+		setMiniLoading(true);
+		getKnowledgeCardsByFaculty(faculty);
+	};
 
 	const deleteUser = (id: any) => {
 		fetch("/api/deleteStudent", {
@@ -54,17 +91,19 @@ const ViewStudentsPage = () => {
 					const response = await res.json();
 					setToastMessage(response.message);
 					setSuccess(true);
-					setTimeout(() => {
-						setSuccess(false);
-					}, 3000);
+					if (updated) {
+						setUpdated(false);
+					}
+					setUpdated(true);
 				} else if (res.status === 404) {
 					const response = await res.json();
 					setToastMessage(response.error);
 					setError(true);
-					setTimeout(() => {
-						setError(false);
-					}, 3000);
 				}
+				setTimeout(() => {
+					setSuccess(false);
+					setError(false);
+				}, 3000);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -174,76 +213,16 @@ const ViewStudentsPage = () => {
 										)}
 									</td>
 									<td className="px-6 py-4">
-										{/* Student Modal */}
-										<Dialog.Root>
-											<Dialog.Trigger asChild>
-												<button
-													type="button"
-													data-modal-target="editUserModal"
-													data-modal-show="editUserModal"
-													className="font-medium text-blue-600 hover:underline"
-												>
-													View User
-												</button>
-											</Dialog.Trigger>
-											<Dialog.Portal>
-												<Dialog.Overlay className="bg-black/[0.4] data-[state=open]:animate-overlayShow fixed inset-0" />
-												<Dialog.Content className="fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
-													<Dialog.Title className="m-0 text-[17px] font-medium">
-														{student.first_name} {student.last_name}
-													</Dialog.Title>
-													<Dialog.Description className="mt-[10px] mb-5 text-[15px] leading-normal">
-														Make changes to your profile here. Click save when
-														you&aposre done.
-													</Dialog.Description>
-													<fieldset className="mb-[15px] flex items-center gap-5">
-														<label
-															className="text-violet11 w-[90px] text-right text-[15px]"
-															htmlFor="name"
-														>
-															Name
-														</label>
-														<input
-															className="text-violet11 shadow-violet7 focus:shadow-violet8 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
-															id="name"
-															defaultValue="Pedro Duarte"
-														/>
-													</fieldset>
-													<fieldset className="mb-[15px] flex items-center gap-5">
-														<label
-															className="text-violet11 w-[90px] text-right text-[15px]"
-															htmlFor="username"
-														>
-															Username
-														</label>
-														<input
-															className="text-violet11 shadow-violet7 focus:shadow-violet8 inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
-															id="username"
-															defaultValue="@peduarte"
-														/>
-													</fieldset>
-													<div className="mt-[25px] flex justify-end">
-														<Dialog.Close asChild>
-															<button
-																type="button"
-																className="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-															>
-																Close
-															</button>
-														</Dialog.Close>
-													</div>
-													<Dialog.Close asChild>
-														<button
-															className="text-violet11 hover:bg-violet4 focus:shadow-violet7 absolute top-[10px] right-[10px] inline-flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-full focus:shadow-[0_0_0_2px] focus:outline-none"
-															aria-label="Close"
-														>
-															<Cross2Icon />
-														</button>
-													</Dialog.Close>
-												</Dialog.Content>
-											</Dialog.Portal>
-										</Dialog.Root>
-										{/* Student Modal End */}
+										<Link
+											href={`/admin-dashboard/student-progress/${student.id}`}
+											onClick={() => getStudentInfo(student.faculty)}
+											data-modal-target="editUserModal"
+											data-modal-show="editUserModal"
+											className="font-medium text-blue-600 hover:underline"
+										>
+											Student Progress
+										</Link>
+
 										{/* Delete Modal  */}
 
 										<AlertDialog.Root>

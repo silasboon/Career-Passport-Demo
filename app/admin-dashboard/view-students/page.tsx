@@ -3,11 +3,15 @@ import { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { Success, Error } from "@/app/components/toasts";
 
 import HashLoader from "react-spinners/HashLoader";
 
 const ViewStudentsPage = () => {
 	const [loading, setLoading] = useState(true);
+	const [toastMessage, setToastMessage] = useState("");
+	const [success, setSuccess] = useState(false);
+	const [error, setError] = useState(false);
 	const [students, setStudents] = useState({
 		students: [
 			{
@@ -45,15 +49,25 @@ const ViewStudentsPage = () => {
 			},
 			body: JSON.stringify({ id }),
 		})
-
 			.then(async (res) => {
-				const response = await res.json();
-				console.log(response);
-			}
-		)
+				if (res.status === 200) {
+					const response = await res.json();
+					setToastMessage(response.message);
+					setSuccess(true);
+					setTimeout(() => {
+						setSuccess(false);
+					}, 3000);
+				} else if (res.status === 404) {
+					const response = await res.json();
+					setToastMessage(response.error);
+					setError(true);
+					setTimeout(() => {
+						setError(false);
+					}, 3000);
+				}
+			})
 			.catch((err) => console.log(err));
 	};
-		
 
 	if (loading) {
 		return (
@@ -71,6 +85,9 @@ const ViewStudentsPage = () => {
 	}
 	return (
 		<>
+			{/* Toasts */}
+			{success ? <Success message={toastMessage} /> : ""}
+			{error ? <Error message="Failed to process the request" /> : ""}
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
 				<h1 className="text-3xl font-bold text-center py-3">All Students</h1>
 				<div className="flex items-center justify-between py-4 bg-white">

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import HashLoader from "react-spinners/HashLoader";
-import { useRouter } from "next/navigation";
 import { Success, Error } from "@/app/components/toasts";
 
 const faculty_dict: any = {
@@ -21,6 +20,7 @@ const Knowledge = () => {
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
 	const [updated, setUpdated] = useState(false);
+	const [toastMessage, setToastMessage] = useState("");
 	const [knowledge, setKnowledge] = useState({
 		facultyData: [
 			{
@@ -41,7 +41,6 @@ const Knowledge = () => {
 				const response = await res.json();
 				setKnowledge(response);
 				setLoading(false);
-				console.log(response)
 			})
 			.catch((err) => {
 				setLoading(false);
@@ -141,6 +140,7 @@ const Knowledge = () => {
 	const handleSubmissionAndToast = (data: any) => {
 		if (data.message === "successfully updated knowledge card") {
 			setViewModal(false);
+			setToastMessage("Successfully updated knowledge card");
 			setSuccess(true);
 			if (setUpdated) {
 				setUpdated(false);
@@ -153,6 +153,7 @@ const Knowledge = () => {
 			setAvailableToAll(false);
 		} else {
 			setViewModal(false);
+			setToastMessage("Failed to update knowledge card");
 			setError(true);
 		}
 		setTimeout(() => {
@@ -160,9 +161,8 @@ const Knowledge = () => {
 		}, 3000);
 	};
 	// Handle delete of knowledge card
-	// TODO: Make this a work
 	const handleDelete = (id: any) => {
-		fetch(`/api/deleteKnowledgeCard/${id}`, {
+		fetch(`/api/deleteKnowledgeCard/`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -170,12 +170,15 @@ const Knowledge = () => {
 			body: JSON.stringify({ id: id }),
 		}).then((res) => {
 			if (res.status === 200) {
+				setToastMessage("Successfully deleted knowledge card");
 				setSuccess(true);
+				setViewModal(false);
 				if (setUpdated) {
 					setUpdated(false);
 				}
 				setUpdated(true);
 			} else {
+				setToastMessage("Failed to delete knowledge card");
 				setError(true);
 			}
 			setTimeout(() => {
@@ -191,7 +194,7 @@ const Knowledge = () => {
 				Knowledge
 			</h1>
 			{/* Toasts */}
-			{success ? <Success message="Successfully Updated Knowledge Card" /> : ""}
+			{success ? <Success message={toastMessage} /> : ""}
 			{error ? <Error message="Failed to process the request" /> : ""}
 
 			<div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -227,12 +230,12 @@ const Knowledge = () => {
 										scope="row"
 										className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
 									>
-										{/* {truncateText(item.title, 40)} */}
+										{truncateText(item.title, 40)}
 									</th>
 									<td className="px-6 py-4">
-										{/* {truncateText(item.description, 50)} */}
+										{truncateText(item.description, 50)}
 									</td>
-									{/* <td className="px-6 py-4">{truncateText(item.link, 50)}</td> */}
+									<td className="px-6 py-4">{truncateText(item.link, 50)}</td>
 									<td className="px-6 py-4">
 										{item.faculty ? faculty_dict[item.faculty] : "All"}
 									</td>
@@ -383,8 +386,8 @@ const Knowledge = () => {
 												Update
 											</button>
 											<a
-												// onClick={() => handleDelete(id)}
-												className="text-red-700 hover:text-white border border-red-500 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hover:curs"
+												onClick={() => handleDelete(id)}
+												className="text-red-700 hover:text-white hover:cursor-pointer border border-red-500 hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hover:curs"
 											>
 												Delete
 											</a>

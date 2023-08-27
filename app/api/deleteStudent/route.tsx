@@ -6,10 +6,9 @@ const prisma = new PrismaClient();
 export async function POST(request: Request) {
 	const data = await request.json();
 	const id = data.id;
-	// get id from params
 	try {
 		// delete knowledge card data from database
-		await prisma.knowledge.delete({
+		await prisma.users.delete({
 			where: {
 				id: id,
 			},
@@ -17,7 +16,7 @@ export async function POST(request: Request) {
 		prisma.$disconnect();
 		return NextResponse.json(
 			{
-				message: "knowledge card deleted",
+				message: "User Deleted Successfully",
 			},
 			{
 				status: 200,
@@ -27,7 +26,7 @@ export async function POST(request: Request) {
 		prisma.$disconnect;
 		return NextResponse.json(
 			{
-				error: "knowledge card not found",
+				error: "Error Deleting User",
 			},
 			{
 				status: 404,
